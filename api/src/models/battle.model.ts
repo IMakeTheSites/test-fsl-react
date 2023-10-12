@@ -1,4 +1,4 @@
-import { Id, RelationMappings } from 'objection';
+import { Id, RelationMappings, Model } from 'objection';
 import Base from './base';
 import { Monster } from './monster.model';
 
@@ -11,6 +11,31 @@ export class Battle extends Base {
   static tableName = 'battle';
 
   static get relationMappings(): RelationMappings {
-    return {};
+    return {
+      monsterARelation: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Monster,
+        join: {
+          from: 'battle.id',
+          to: 'monster.id',
+        },
+      },
+      monsterBRelation: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Monster,
+        join: {
+          from: 'battle.id',
+          to: 'monster.id',
+        },
+      },
+      winnerRelation: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Monster,
+        join: {
+          from: 'battle.id',
+          to: 'monster.id',
+        },
+      },
+    };
   }
 }
