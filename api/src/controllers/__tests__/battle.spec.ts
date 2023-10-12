@@ -26,7 +26,7 @@ const mockMonsters = [
   },
   {
     "name": "Red Dragon",
-    "attack": 90,
+    "attack": 78,
     "defense": 80,
     "hp": 90,
     "speed": 70,
@@ -66,32 +66,31 @@ describe('BattleController', () => {
 
   describe('Battle', () => {
     test('should fail when trying a battle of monsters with an undefined monster', async () => {
-
-      const response = await request(server)
+      await request(server)
         .post('/battle')
-        .send([{ ...mockMonsters[0], id: 1 }, undefined]);
-      expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+        .send([{ ...mockMonsters[0], id: 2 }, undefined])
+        .expect(StatusCodes.BAD_REQUEST);
     });
   
-    // test('should fail when trying a battle of monsters with an inexistent monster', async () => {
-    //   const response = await request(server)
-    //     .post('/battle')
-    //     .send([{ ...mockMonsters[0], id: 1 }, inexistentMonster]);
-    //   expect(response.status).toBe(StatusCodes.BAD_REQUEST);
-    // });
+    test('should fail when trying a battle of monsters with an inexistent monster', async () => {
+      await request(server)
+        .post('/battle')
+        .send([{ ...mockMonsters[0], id: 2 }, inexistentMonster])
+        .expect(StatusCodes.BAD_REQUEST);
+    });
   
-    // test('should insert a battle of monsters successfully with monster 1 winning', async () => {
-    //   const response = await request(server)
-    //     .post('/battle')
-    //     .send([{ ...mockMonsters[0], id: 1 }, { ...mockMonsters[1], id: 2 }]);
-    //   expect(response.status).toBe(StatusCodes.OK);
-    // });
+    test('should insert a battle of monsters successfully with monster 1 winning', async () => {
+      await request(server)
+        .post('/battle')
+        .send([{ ...mockMonsters[0], id: 2 }, { ...mockMonsters[1], id: 3 }])
+        .expect(StatusCodes.OK);
+    });
   
-    // test('should insert a battle of monsters successfully with monster 2 winning', async () => {
-    //   const response = await request(server)
-    //     .post('/battle')
-    //     .send([{ ...mockMonsters[1], id: 2 }, { ...mockMonsters[0], id: 1 }]);
-    //   expect(response.status).toBe(StatusCodes.OK);
-    // });
+    test('should insert a battle of monsters successfully with monster 2 winning', async () => {
+      await request(server)
+        .post('/battle')
+        .send([{ ...mockMonsters[1], id: 3 }, { ...mockMonsters[0], id: 2 }])
+        .expect(StatusCodes.OK);
+    });
   });
 });

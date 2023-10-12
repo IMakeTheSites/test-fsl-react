@@ -7,12 +7,6 @@ const list = async (req: Request, res: Response): Promise<Response> => {
   return res.status(StatusCodes.OK).json(monsters);
 };
 
-const del = async (req: Request, res: Response): Promise<Response> => {
-  const monsters = await Monster.query().del();
-  return res.status(StatusCodes.OK).json(monsters);
-}
-
 export const MonsterController = {
   list,
-  del
 };

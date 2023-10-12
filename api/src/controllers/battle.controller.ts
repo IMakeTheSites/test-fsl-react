@@ -10,10 +10,9 @@ const list = async (req: Request, res: Response): Promise<Response> => {
 
 const add = async (req: Request, res: Response): Promise<Response> => {
   const reqMonsters = req.body;
-  console.log('reqMonsters===>', reqMonsters);
 
   if (!reqMonsters[0] || !reqMonsters[1]) {
-    return res.status(StatusCodes.BAD_REQUEST)
+    return res.status(StatusCodes.BAD_REQUEST).json({})
   }
 
   let monsters;
@@ -21,14 +20,12 @@ const add = async (req: Request, res: Response): Promise<Response> => {
   try {
     monsters = await Monster.query().findByIds(reqMonsters.map((rM: Monster) => rM.id));
   } catch (error) {
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({});
   }
-  
 
-  // console.log('propcess.env', process.env.NODE_ENV)
-  console.log('monsters===>', monsters);
+  
   if (monsters.length < 2) { // if inexistent
-    return res.status(StatusCodes.BAD_REQUEST)
+    return res.status(StatusCodes.BAD_REQUEST).json({})
   }
 
   const newBat = battle(monsters[0], monsters[1]);
