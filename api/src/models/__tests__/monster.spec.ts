@@ -1,5 +1,9 @@
 import { Monster } from '..';
 
+afterAll(async () => {
+  await Monster.query().del();
+});
+
 describe('MonsterModel', () => {
   test('should map the properties correctly', async () => {
     const monster = await Monster.query().insert({

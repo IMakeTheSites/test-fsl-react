@@ -5,14 +5,20 @@ import { MonsterBattleCard } from "../../components/monster-battle-card/MonsterB
 import { MonstersList } from "../../components/monsters-list/MonstersList"
 import { Title } from "../../components/title/Title"
 import { fetchMonstersData } from "../../reducers/monsters/monsters.actions"
-import { selectMonsters, selectSelectedMonster } from "../../reducers/monsters/monsters.selectors"
+import { selectMonsters, selectSelectedMonster, selectComMonster } from "../../reducers/monsters/monsters.selectors"
 import { BattleSection, PageContainer, StartBattleButton } from "./BattleOfMonsters.styled"
+import { postBattleData } from "../../reducers/battle/battle.actions"
+import { selectCurrentBattle } from "../../reducers/battle/battle.selectors"
+import { WinnerDisplay } from "../../components/winner-display/WinnerDisplay"
 
 const BattleOfMonsters = () => {
     const dispatch = useAppDispatch()
 
     const monsters = useSelector(selectMonsters)
     const selectedMonster = useSelector(selectSelectedMonster)
+    const comMonster = useSelector(selectComMonster)
+
+    const currentBattle = useSelector(selectCurrentBattle)
 
     useEffect(() => {
         dispatch(fetchMonstersData())
@@ -20,6 +26,10 @@ const BattleOfMonsters = () => {
 
     const handleStartBattleClick = () => {
         // Fight!
+        if (!selectedMonster || !comMonster) {
+            return;
+        }
+        dispatch(postBattleData([selectedMonster, comMonster]))
     }
 
     return (
@@ -28,10 +38,12 @@ const BattleOfMonsters = () => {
 
             <MonstersList monsters={monsters} />
 
+            {currentBattle && <WinnerDisplay text={currentBattle?.winner.name} />}
+
             <BattleSection>
-                <MonsterBattleCard title={selectedMonster?.name || "Player"}></MonsterBattleCard>
+                <MonsterBattleCard title={selectedMonster?.name || "Player"} monster={selectedMonster}></MonsterBattleCard>
                 <StartBattleButton data-testid="start-battle-button"  disabled={selectedMonster === null} onClick={handleStartBattleClick}>Start Battle</StartBattleButton>
-                <MonsterBattleCard title="Computer"></MonsterBattleCard>
+                <MonsterBattleCard title={comMonster?.name || "Computer"} monster={comMonster}></MonsterBattleCard>
             </BattleSection>
         </PageContainer>
     )

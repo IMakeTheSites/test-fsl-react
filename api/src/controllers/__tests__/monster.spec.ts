@@ -7,7 +7,10 @@ import { Monster } from '../../models';
 
 const server = app.listen();
 
-afterAll(() => server.close());
+afterAll(async () => {
+  await Monster.query().del();
+  server.close();
+});
 
 describe('MonsterController', () => {
   describe('List', () => {
